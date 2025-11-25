@@ -1,6 +1,8 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { TaskComponent } from './task/task.component';
 import { NewTaskComponent } from "./new-task/new-task.component";
+import { NewTaskData } from './task/task.model';
+import { TasksService } from './tasks.service';
 
 @Component({
   selector: 'app-tasks',
@@ -10,51 +12,20 @@ import { NewTaskComponent } from "./new-task/new-task.component";
   styleUrl: './tasks.component.css',
 })
 export class TasksComponent {
-  selectedUserId = input<string>();
-  name = input<string>();
-  selectedUserTasks = computed(() =>
-    this.tasks().filter((task) => task.userId === this.selectedUserId())
-  );
-
+  selectedUserId = input<string>('u1');
+  name = input<string>('u1');
   isAddingTask: boolean = false;
+
+  // constructor(private tasksServive: TasksService) {}
+  private tasksService = inject(TasksService);
+
+  selectedUserTasks = computed(() => this.tasksService.getUserTasks(this.selectedUserId())());
 
   onStartAddTask() {
     this.isAddingTask = true;
   }
 
-  onCancelAddTask() {
+  onCloseAddTask() {
     this.isAddingTask = false;
   }
-
-  onCompleteTask(id: string) {
-    this.tasks.update(tasks => 
-      tasks.filter(task => task.id !== id)
-    );
-  }
-
-  tasks = signal([
-    {
-      id: 't1',
-      userId: 'u1',
-      title: 'Master Angular',
-      summary:
-        'Learn all the basic and advanced features of Angular & how to apply them.',
-      dueDate: '2025-12-31',
-    },
-    {
-      id: 't2',
-      userId: 'u3',
-      title: 'Build first prototype',
-      summary: 'Build a first prototype of the online shop website',
-      dueDate: '2024-05-31',
-    },
-    {
-      id: 't3',
-      userId: 'u3',
-      title: 'Prepare issue template',
-      summary:
-        'Prepare and describe an issue template which will help with project management',
-      dueDate: '2024-06-15',
-    },
-  ]);
 }
