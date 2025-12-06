@@ -18,6 +18,9 @@
   @if(emailIsInvalid) {
   <p class="control-error">Invalid Email. Please check your input.</p>
   } @if(passwordIsInvalid) {
-  <p class="control-error">Invalid Password. Please check your input.</p>
+  <p class="control-error">
+    Invalid Password. Please check your input. Must be 6 characters long and
+    must contain a question mark.
+  </p>
   }
 </form>
